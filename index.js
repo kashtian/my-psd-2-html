@@ -2,12 +2,16 @@ const axios = require('axios')
 const fs = require('fs')
 const LayerParser = require('./LayerParser.js')
 var parser
+let mobile = false
+let unit = 'px'
 
 function getPsdInfo() {
   return axios({
     url: 'https://alipic.lanhuapp.com/psc7f813107e3483bb-8a21-413a-9d44-7e03d81dcb10'
   }).then(res => {
     let psdInfo = res.data
+    mobile = true
+    unit = mobile ? 'rem' : 'px'
     parser = new LayerParser()
     parser.initData(psdInfo)
     let doms = createDomTree(psdInfo.info)
@@ -102,19 +106,21 @@ function getStyle(n, level, index) {
   parser.setLayerInfo(n)
   let style = ''
   style += '.' + n._class + '{\n'
-  style += parser.webPSCode()
+  style += parser.webPSCode(mobile)
   if (n.images) {
     style += `background-image: url(${n.images.orgUrl});\n`
+    style += `background-repeat: no-repeat;\n`
+    style += `background-size: 100%;\n`
   }
   if (level !== 0) {
     if (n._parent._horizontal) {
       let preNode = index === 0 ? n._parent : n._parent._children[index - 1]
-      style += `margin-left: ${n.left - (preNode.left + (index === 0 ? 0 : preNode.width))}px;\n`
-      style += `margin-top: ${n.top - n._parent.top}px;\n`
+      style += `margin-left: ${n.left - (preNode.left + (index === 0 ? 0 : preNode.width))}${unit};\n`
+      style += `margin-top: ${n.top - n._parent.top}${unit};\n`
     } else {
-      style += `margin-left: ${n.left - n._parent.left}px;\n`
+      style += `margin-left: ${n.left - n._parent.left}${unit};\n`
       let preNode = index === 0 ? n._parent : n._parent._children[index - 1]
-      style += `margin-top: ${n.top - (preNode.top + (index === 0 ? 0 : preNode.height))}px;\n`
+      style += `margin-top: ${n.top - (preNode.top + (index === 0 ? 0 : preNode.height))}${unit};\n`
     }
   }
   style += '}\n'
@@ -124,13 +130,29 @@ function getStyle(n, level, index) {
 // 构造具有嵌套关系的dom tree
 function createDomTree(arr) {
   let parents = []
-  let i = 1
+  let i = validLayer(arr[1]) ? 0 : 1
   let item
   while(++i < arr.length) {
     item = arr[i]
     retrieveParents(item, parents)
   }
   return parents
+}
+
+// 判断一个layer是否没有任何有效信息
+function validLayer(layer) {
+  let types = ['textLayer', 'shapeLayer']
+  if (types.includes(layer.type)) {
+    return true
+  }
+  let options = ['layerEffects', 'fill', 'strokeStyle', 'blendOptions', 'path']
+  let i = -1
+  while(++i < options.length) {
+    if (layer.hasOwnProperty(options[i])) {
+      return true
+    }
+  }
+  return false
 }
 
 /**
@@ -189,7 +211,7 @@ function insertInArr(arr, item) {
 
 // left 不同为水平方向，left相同为垂直方向判断top
 function isALessB(a, b) {
-  if (a.top !== b.top && (a.top >= (b.top + b.height) || (a.top + a.height) <= b.top) ) {
+  if (a.top !== b.top && !isVerticalCross(a, b) ) {
     // 垂直布局
     return a.top < b.top
   } else {
@@ -215,7 +237,12 @@ function isDescendants(item, parent) {
 // 判断item与parent是否是父子元素关系
 function isParent(item, parent) {
   return item.left >= parent.left && (item.left + item.width) <= (parent.left + parent.width) // 水平方向范围
-    && item.top < (parent.top + parent.height) && (item.top + item.height) > parent.top // 垂直方向有交集的才能是父子关系
+    && isVerticalCross(item, parent) // 垂直方向有交集的才能是父子关系
+}
+
+// 判断两个元素在垂直方向是否有交集,+2是因为设计有误差，让元素相交了
+function isVerticalCross(a, b) {
+  return !(a.top + 2 >= (b.top + b.height) || (a.top + a.height) <= b.top + 2)
 }
 
 // 根据children判断node是水平还是垂直布局

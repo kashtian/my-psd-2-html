@@ -41,7 +41,7 @@ module.exports = class LayerParser {
     var n = t ? 'rem' : 'px';
     // 5 == this.resolu && (n = this.$parent.$refs.devicedom.customUnit);
     var i = {
-      width: 5 != this.resolu ? this.getModel(this.layerinfo.width, t) + ('textLayer' == this.layerinfo.type ? 5 : 0) + n : ''.concat(Math.round(this.layerinfo.width / this.imageData.width * this.resoluscale)).concat(n),
+      width: 5 != this.resolu ? this.getModel(this.layerinfo.width, t) + n : ''.concat(Math.round(this.layerinfo.width / this.imageData.width * this.resoluscale)).concat(n),
       height: 5 != this.resolu ? this.getModel(this.layerinfo.height, t) + n : ''.concat(Math.round(this.layerinfo.height / this.imageData.height * (this.resoluscale / (this.imageData.width / this.imageData.height)))).concat(n)
     };
     if (5 == this.resolu && this.layerinfo.height == this.imageData.height && (i.height = Math.round(this.resoluscale / (this.imageData.width / this.imageData.height)) + n), 5 == this.resolu && this.layerinfo.width == this.imageData.width && (i.width = this.resoluscale + n), 'textLayer' == this.layerinfo.type) if (i['font-size'] = 5 != this.resolu ? this.getModel(this.layerinfo.textInfo.size, t) + n : ''.concat(Math.round(this.layerinfo.textInfo.size / this.imageData.width * this.resoluscale)).concat(n), i['font-family'] = this.layerinfo.textInfo.fontName, this.layerinfo.xdType) {
@@ -223,6 +223,11 @@ module.exports = class LayerParser {
     // 修正单行text的行高
     if ('textLayer' == this.layerinfo.type && this.layerinfo.textInfo.size >= this.layerinfo.height) {
       i['line-height'] = i.height
+      let size = this.layerinfo.textInfo.size
+      if (t && size < 24) {
+        size = 24
+      }
+      i.width = (this.layerinfo.width = size * this.layerinfo.textInfo.text.trim().length) + n
     }
     for (var Y in console.log(i), i) i[Y] && (this.codeString += ''.concat(Y, ':').concat(i[Y], ';\n'))
     return this.codeString
