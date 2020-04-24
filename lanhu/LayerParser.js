@@ -211,20 +211,36 @@ module.exports = class LayerParser {
           }
         }
       }
-      this.layerinfo.blendOptions && (this.layerinfo.blendOptions.opacity || this.layerinfo.blendOptions.fillOpacity) && (this.layerinfo.hasOwnProperty('pixels') ? this.layerinfo.blendOptions.opacity && this.layerinfo.blendOptions.fillOpacity ? i.opacity = (Math.round(this.layerinfo.blendOptions.opacity.value) / 100 * (Math.round(this.layerinfo.blendOptions.fillOpacity.value) / 100)).toFixed(2) : this.layerinfo.blendOptions.opacity ? i.opacity = Math.round(this.layerinfo.blendOptions.opacity.value) / 100 : this.layerinfo.blendOptions.fillOpacity && (i.opacity = Math.round(this.layerinfo.blendOptions.fillOpacity.value) / 100) : this.layerinfo.blendOptions.opacity && (i.opacity = Math.round(this.layerinfo.blendOptions.opacity.value) / 100)),
-        this.layerinfo.path && this.layerinfo.path.pathComponents[0].origin.radii && (this.layerinfo.path.pathComponents[0].origin.radii[0] == this.layerinfo.path.pathComponents[0].origin.radii[1] && this.layerinfo.path.pathComponents[0].origin.radii[0] == this.layerinfo.path.pathComponents[0].origin.radii[2] && this.layerinfo.path.pathComponents[0].origin.radii[0] == this.layerinfo.path.pathComponents[0].origin.radii[3] ? 5 != this.resolu ? i['border-radius'] = ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[1])).concat(n) : i['border-radius'] = ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[1] / this.imageData.width * this.resoluscale)).concat(n) : 5 != this.resolu ? (i['border-radius'] = ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[3])).concat(n, ' '), i['border-radius'] += ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[0])).concat(n, ' '), i['border-radius'] += ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[1])).concat(n, ' '), i['border-radius'] += ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[2])).concat(n)) : (i['border-radius'] = ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[3] / this.imageData.width * this.resoluscale)).concat(n, ' '), i['border-radius'] += ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[0] / this.imageData.width * this.resoluscale)).concat(n, ' '), i['border-radius'] += ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[1] / this.imageData.width * this.resoluscale)).concat(n, ' '), i['border-radius'] += ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[2] / this.imageData.width * this.resoluscale)).concat(n))),
+      this.layerinfo.blendOptions && (this.layerinfo.blendOptions.opacity || this.layerinfo.blendOptions.fillOpacity) && (this.layerinfo.hasOwnProperty('pixels')
+      ? this.layerinfo.blendOptions.opacity && this.layerinfo.blendOptions.fillOpacity
+        ? i.opacity = (Math.round(this.layerinfo.blendOptions.opacity.value) / 100 * (Math.round(this.layerinfo.blendOptions.fillOpacity.value) / 100)).toFixed(2)
+        : this.layerinfo.blendOptions.opacity
+          ? i.opacity = Math.round(this.layerinfo.blendOptions.opacity.value) / 100
+          : this.layerinfo.blendOptions.fillOpacity && (i.opacity = Math.round(this.layerinfo.blendOptions.fillOpacity.value) / 100)
+      : this.layerinfo.blendOptions.opacity && (i.opacity = Math.round(this.layerinfo.blendOptions.opacity.value) / 100)),
+        this.layerinfo.path && this.layerinfo.path.pathComponents[0].origin.radii && (this.layerinfo.path.pathComponents[0].origin.radii[0] == this.layerinfo.path.pathComponents[0].origin.radii[1] && this.layerinfo.path.pathComponents[0].origin.radii[0] == this.layerinfo.path.pathComponents[0].origin.radii[2] && this.layerinfo.path.pathComponents[0].origin.radii[0] == this.layerinfo.path.pathComponents[0].origin.radii[3]
+       ? 5 != this.resolu
+         ? i['border-radius'] = ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[1], t)).concat(n)
+         : i['border-radius'] = ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[1] / this.imageData.width * this.resoluscale)).concat(n)
+       : 5 != this.resolu
+         ? (i['border-radius'] = ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[3])).concat(n, ' '), i['border-radius'] += ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[0])).concat(n, ' '), i['border-radius'] += ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[1])).concat(n, ' '), i['border-radius'] += ''.concat(this.getModel(this.layerinfo.path.pathComponents[0].origin.radii[2])).concat(n))
+         : (i['border-radius'] = ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[3] / this.imageData.width * this.resoluscale)).concat(n, ' '), i['border-radius'] += ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[0] / this.imageData.width * this.resoluscale)).concat(n, ' '), i['border-radius'] += ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[1] / this.imageData.width * this.resoluscale)).concat(n, ' '), i['border-radius'] += ''.concat(Math.round(this.layerinfo.path.pathComponents[0].origin.radii[2] / this.imageData.width * this.resoluscale)).concat(n))),
         this.layerinfo.path && this.layerinfo.path.pathComponents[0] && 'ellipse' == this.layerinfo.path.pathComponents[0].origin.type && (i['border-radius'] = '50%')
     }
     // 修正单行text的行高
-    if ('textLayer' == this.layerinfo.type && this.layerinfo.textInfo.size >= this.layerinfo.height) {
-      i['line-height'] = i.height
-      let size = this.layerinfo.textInfo.size
-      // 暂时不限制fontsize, 会导致手机上布局错误，手机可以支持到8px
-      // if (t && size < 24) {
-      //   size = 24
-      // }
-      this.layerinfo.width = size * this.layerinfo.textInfo.text.trim().length
-      i.width = this.getModel(this.layerinfo.width, t) + n
+    if ('textLayer' == this.layerinfo.type) {
+      if (this.layerinfo.textInfo.size >= this.layerinfo.height) {        
+        i['line-height'] = i.height
+        let size = this.layerinfo.textInfo.size
+        // 暂时不限制fontsize, 会导致手机上布局错误，手机可以支持到8px
+        // if (t && size < 24) {
+        //   size = 24
+        // }
+        this.layerinfo.width = size * this.layerinfo.textInfo.text.trim().length
+        i.width = this.getModel(this.layerinfo.width, t) + n
+      } else if (this.layerinfo.textInfo.leading < this.layerinfo.textInfo.size) {
+        i['line-height'] = ''
+      }
     }
     for (var Y in i) i[Y] && (this.codeString += ''.concat(Y, ':').concat(i[Y], ';\n'))
     return this.codeString
