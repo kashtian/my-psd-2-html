@@ -12,6 +12,7 @@ module.exports = class LayerParser {
   imageData = {} // 接口获取的board里的宽高属性
   fontWeightList = fontWeightList
   psLayerEffectsDefault = psLayerEffectsDefault
+  mobileFontSize = 0 // mobile设置的基础html fontsize
 
   // 设置imageData
   setImageData(data) {
@@ -21,6 +22,11 @@ module.exports = class LayerParser {
   // 设置layerinfo
   setLayerInfo(info) {
     this.layerinfo = info
+  }
+
+  // 设置mobile fontsize
+  setMobileFontSize(fontSize) {
+    this.mobileFontSize = fontSize
   }
 
   // 将layers数据解析为web style code
@@ -216,14 +222,15 @@ module.exports = class LayerParser {
       if (t && size < 24) {
         size = 24
       }
-      i.width = (this.layerinfo.width = size * this.layerinfo.textInfo.text.trim().length) + n
+      this.layerinfo.width = size * this.layerinfo.textInfo.text.trim().length
+      i.width = this.getModel(this.layerinfo.width, t) + n
     }
     for (var Y in i) i[Y] && (this.codeString += ''.concat(Y, ':').concat(i[Y], ';\n'))
     return this.codeString
   }
 
   getModel(t, e) {
-    return e ? Math.round(t / this.resoluscale * 100) / 100 : t ? Math.round(t / this.resoluscale) : '0'
+    return e ? Math.round(t / this.mobileFontSize * 100) / 100 : t ? Math.round(t / this.resoluscale) : '0'
   }
 
   getFontWeight(t) {

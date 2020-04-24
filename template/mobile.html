@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="../main.css" />
+  <link rel="stylesheet" type="text/css" href="dom.css" />
+  <title>Mobile</title>
+  <script>
+    let baseFontSize = {{ baseFontSize }}
+    function setFontSize() {
+      let fontSize = Math.min(screen.width, document.documentElement.getBoundingClientRect().width) / 375 * baseFontSize
+      document.documentElement.style.fontSize = (fontSize >= 20 ? 20 : Math.floor(fontSize)) + 'px'
+    }
+    setFontSize()
+  </script>
+</head>
+<body>
+  {{ APP }}
+</body>
+</html>

@@ -3,7 +3,9 @@ const fs = require('fs')
 
 module.exports = class HtmlBuilder {
   tabUnit = '  '
+  isMobile = false
 
+  // 创建节点开始标签
   createNodeStart(n, level, i) {
     let str = ''
     let tag = this.getTag(level)
@@ -24,6 +26,7 @@ module.exports = class HtmlBuilder {
     return str
   }
 
+  // 创建节点结束标签
   createNodeEnd(n, level) {
     let str = '' 
     str += `</${this.getTag(level)}>\n`
@@ -33,13 +36,14 @@ module.exports = class HtmlBuilder {
     return str
   }
 
+  // 获取html 标签名
   getTag(level) {
     return level === 0 ? 'section' : 'div'
   }
 
   // 将html插入到模板中
   compilteTemplate(templateVars) {
-    return fs.promises.readFile('temp.html', {
+    return fs.promises.readFile(this.getTemplatePath(), {
       encoding: 'utf-8'
     }).then(fileContent => {
       let templateFunction = template(fileContent, {
@@ -47,5 +51,14 @@ module.exports = class HtmlBuilder {
       })
       return templateFunction(templateVars)
     })
+  }
+
+  // 根据isMobile获取相应的模板path
+  getTemplatePath() {
+    return this.isMobile ? 'template/mobile.html' : 'template/pc.html'
+  }
+
+  setMobile(flag) {
+    this.isMobile = flag
   }
 }

@@ -1,15 +1,19 @@
 module.exports = class StyleBuilder {
-  unit = 'px'
+  isMobile = false
+  mobileFontSize = 0
+
   constructor(layerParser) {
     this.layerParser = layerParser
   }
 
   // 根据节点信息创建节点样式
   createNodeStyle(n, level, index) {
-    let style = ''    
+    let style = ''
+    // 给图层解析器设置要解析的当前图层
     this.layerParser.setLayerInfo(n)
     style += '.' + n._class + '{\n'
-    style += this.layerParser.webPSCode()
+    // 图层解析器生成样式代码
+    style += this.layerParser.webPSCode(this.isMobile)
     if (n.images) {
       style += `background-image: url(${n.images.orgUrl});\n`
       style += `background-repeat: no-repeat;\n`
@@ -18,15 +22,28 @@ module.exports = class StyleBuilder {
     if (level !== 0) {
       if (n._parent._horizontal) {
         let preNode = index === 0 ? n._parent : n._parent._children[index - 1]
-        style += `margin-left: ${n.left - (preNode.left + (index === 0 ? 0 : preNode.width))}${this.unit};\n`
-        style += `margin-top: ${n.top - n._parent.top}${this.unit};\n`
+        style += `margin-left: ${this.getModel(n.left - (preNode.left + (index === 0 ? 0 : preNode.width)))};\n`
+        style += `margin-top: ${this.getModel(n.top - n._parent.top)};\n`
       } else {
-        style += `margin-left: ${n.left - n._parent.left}${this.unit};\n`
+        style += `margin-left: ${this.getModel(n.left - n._parent.left)};\n`
         let preNode = index === 0 ? n._parent : n._parent._children[index - 1]
-        style += `margin-top: ${n.top - (preNode.top + (index === 0 ? 0 : preNode.height))}${this.unit};\n`
+        style += `margin-top: ${this.getModel(n.top - (preNode.top + (index === 0 ? 0 : preNode.height)))};\n`
       }
     }
     style += '}\n'
     return style
+  }
+
+  // 根据isMobile获取对应的数值
+  getModel(v) {
+    return (this.isMobile ? Math.round(v / this.mobileFontSize * 100) / 100 + 'rem' : v + 'px')
+  }
+
+  setMobileFontSize(fontSize) {
+    this.mobileFontSize = fontSize
+  }
+
+  setMobile(flag) {
+    this.isMobile = flag
   }
 }
