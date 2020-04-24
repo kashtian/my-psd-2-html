@@ -219,9 +219,10 @@ module.exports = class LayerParser {
     if ('textLayer' == this.layerinfo.type && this.layerinfo.textInfo.size >= this.layerinfo.height) {
       i['line-height'] = i.height
       let size = this.layerinfo.textInfo.size
-      if (t && size < 24) {
-        size = 24
-      }
+      // 暂时不限制fontsize, 会导致手机上布局错误，手机可以支持到8px
+      // if (t && size < 24) {
+      //   size = 24
+      // }
       this.layerinfo.width = size * this.layerinfo.textInfo.text.trim().length
       i.width = this.getModel(this.layerinfo.width, t) + n
     }
