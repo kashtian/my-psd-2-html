@@ -247,7 +247,7 @@ module.exports = class LayerParser {
   }
 
   getModel(t, e) {
-    return e ? Math.round(t / this.mobileFontSize * 100) / 100 : t ? Math.round(t / this.resoluscale) : '0'
+    return e ? Math.floor(t / this.mobileFontSize * 1000) / 1000 : t ? Math.floor(t / this.resoluscale) : '0'
   }
 
   getFontWeight(t) {

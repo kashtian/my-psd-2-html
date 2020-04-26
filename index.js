@@ -3,7 +3,7 @@ const fs = require('fs')
 const LayerParser = require('./lanhu/LayerParser.js')
 const layersHelper = require('./lanhu/layers-helper')
 const { createDomTree } = require('./dom/dom-parser')
-const rebuildNode = require('./dom/node-rebuilde')
+const { rebuildNodes, rebuildNode } = require('./dom/node-helper')
 const StyleBuilder = require('./compile/style-builder')
 const HtmlBuilder = require('./compile/html-builder')
 
@@ -17,7 +17,7 @@ let mobileFontSize = 32
 
 function getPsdInfo() {
   return axios({
-    url: 'https://alipic.lanhuapp.com/psc7f813107e3483bb-8a21-413a-9d44-7e03d81dcb10'
+    url: 'https://alipic.lanhuapp.com/ps8d43d55c9cb94603-d6ba-4c0b-a83d-62f48c323dd2'
   }).then(res => {
     let psdInfo = res.data
     // 处理蓝湖数据，规范结构
@@ -53,13 +53,16 @@ getPsdInfo()
 function traverseDoms(nodes, level = 0) {
   let i = -1
   let n
+  
+  rebuildNodes(nodes, level)
+
   while(++i < nodes.length) {
     n = nodes[i]
     rebuildNode(n)
     // 构建html开始标签
     html += htmlBuilder.createNodeStart(n, level, i)
     // 生成节点样式
-    style += styleBuilder.createNodeStyle(n, level, i)    
+    style += styleBuilder.createNodeStyle(n, level, i, nodes)    
     if (n._children) {
       traverseDoms(n._children, level + 1)
     }

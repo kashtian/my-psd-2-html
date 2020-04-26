@@ -7,7 +7,7 @@ module.exports = class StyleBuilder {
   }
 
   // 根据节点信息创建节点样式
-  createNodeStyle(n, level, index) {
+  createNodeStyle(n, level, index, nodes) {
     let style = ''
     // 给图层解析器设置要解析的当前图层
     this.layerParser.setLayerInfo(n)
@@ -29,6 +29,9 @@ module.exports = class StyleBuilder {
         let preNode = index === 0 ? n._parent : n._parent._children[index - 1]
         style += `margin-top: ${this.getModel(n.top - (preNode.top + (index === 0 ? 0 : preNode.height)))};\n`
       }
+    } else {
+      style += `margin-left: ${this.getModel(n.left)};\n`
+      style += `margin-top: ${this.getModel(n.top - (index === 0 ? 0 : (nodes[index - 1].top + nodes[index - 1].height)))}`
     }
     style += '}\n'
     return style
@@ -36,7 +39,7 @@ module.exports = class StyleBuilder {
 
   // 根据isMobile获取对应的数值
   getModel(v) {
-    return (this.isMobile ? Math.round(v / this.mobileFontSize * 100) / 100 + 'rem' : v + 'px')
+    return (this.isMobile ? Math.floor(v / this.mobileFontSize * 1000) / 1000 + 'rem' : v + 'px')
   }
 
   setMobileFontSize(fontSize) {
