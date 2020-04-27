@@ -94,6 +94,9 @@ function validLayer(layer) {
   if (types.includes(layer.type)) {
     return true
   }
+  if (!layer.width && !layer.height) {
+    return false
+  }
   let options = ['layerEffects', 'fill', 'strokeStyle', 'blendOptions', 'path']
   let i = -1
   while(++i < options.length) {
@@ -111,6 +114,9 @@ function createDomTree(arr) {
   let item
   while(++i < arr.length) {
     item = arr[i]
+    if (!validLayer(item)) {
+      continue
+    }
     retrieveParents(item, parents)
   }
   return parents

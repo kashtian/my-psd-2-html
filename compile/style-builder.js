@@ -19,19 +19,25 @@ module.exports = class StyleBuilder {
       style += `background-repeat: no-repeat;\n`
       style += `background-size: 100%;\n`
     }
+    let marginLeft = 0
+    let marginTop = 0
     if (level !== 0) {
       if (n._parent._horizontal) {
-        let preNode = index === 0 ? n._parent : n._parent._children[index - 1]
-        style += `margin-left: ${this.getModel(n.left - (preNode.left + (index === 0 ? 0 : preNode.width)))};\n`
-        style += `margin-top: ${this.getModel(n.top - n._parent.top)};\n`
+        marginLeft = n.left - (index === 0 ? n._parent.left : (nodes[index - 1].left + nodes[index - 1].width))
+        marginTop = n.top - n._parent.top
       } else {
-        style += `margin-left: ${this.getModel(n.left - n._parent.left)};\n`
-        let preNode = index === 0 ? n._parent : n._parent._children[index - 1]
-        style += `margin-top: ${this.getModel(n.top - (preNode.top + (index === 0 ? 0 : preNode.height)))};\n`
+        marginLeft = n.left - n._parent.left
+        marginTop = n.top - (index === 0 ? n._parent.top : (nodes[index - 1].top + nodes[index - 1].height))
       }
     } else {
-      style += `margin-left: ${this.getModel(n.left)};\n`
-      style += `margin-top: ${this.getModel(n.top - (index === 0 ? 0 : (nodes[index - 1].top + nodes[index - 1].height)))}`
+      marginLeft = n.left
+      marginTop = n.top - (index === 0 ? 0 : (nodes[index - 1].top + nodes[index - 1].height))
+    }
+    if (marginLeft) {
+      style += `margin-left: ${this.getModel(marginLeft)};\n`
+    }
+    if (marginTop) {
+      style += `margin-top: ${this.getModel(marginTop)}`
     }
     style += '}\n'
     return style

@@ -231,17 +231,19 @@ module.exports = class LayerParser {
     if ('textLayer' == this.layerinfo.type) {
       if (this.layerinfo.textInfo.size >= this.layerinfo.height) {        
         i['line-height'] = i.height
-        let size = this.layerinfo.textInfo.size
-        // 暂时不限制fontsize, 会导致手机上布局错误，手机可以支持到8px
-        // if (t && size < 24) {
-        //   size = 24
-        // }
-        this.layerinfo.width = size * this.layerinfo.textInfo.text.trim().length
-        i.width = this.getModel(this.layerinfo.width, t) + n
+        let size = Math.floor(this.layerinfo.textInfo.size)
+        let textWidth = size * this.layerinfo.textInfo.text.trim().length
+        if (this.layerinfo.width < textWidth) {
+          // 对于UI宽度可能会小于实际显示宽度的文本，重置width属性
+          this.layerinfo._extraWidth = 10
+          this.layerinfo.width += this.layerinfo._extraWidth
+          i.width = this.getModel(this.layerinfo.width, t) + n
+        }
       } else if (this.layerinfo.textInfo.leading < this.layerinfo.textInfo.size) {
-        i['line-height'] = ''
+        delete i['line-height']
       }
     }
+
     for (var Y in i) i[Y] && (this.codeString += ''.concat(Y, ':').concat(i[Y], ';\n'))
     return this.codeString
   }
