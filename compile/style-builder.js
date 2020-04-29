@@ -37,7 +37,7 @@ module.exports = class StyleBuilder {
       style += `margin-left: ${this.getModel(marginLeft)};\n`
     }
     if (marginTop) {
-      style += `margin-top: ${this.getModel(marginTop)}`
+      style += `margin-top: ${this.getModel(marginTop)};\n`
     }
     style += '}\n'
     return style

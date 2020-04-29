@@ -29,7 +29,7 @@ module.exports = class HtmlBuilder {
   // 创建节点结束标签
   createNodeEnd(n, level) {
     let str = '' 
-    str += `</${this.getTag(level)}>\n`
+    str += n._tab + `</${this.getTag(level)}>\n`
     if (level === 0) {
       str += `<!-- ${n._class} end -->\n`
     }
@@ -42,8 +42,8 @@ module.exports = class HtmlBuilder {
   }
 
   // 将html插入到模板中
-  compilteTemplate(templateVars) {
-    return fs.promises.readFile(this.getTemplatePath(), {
+  compilteTemplate(templateVars, options) {
+    return fs.promises.readFile(this.getTemplatePath(options), {
       encoding: 'utf-8'
     }).then(fileContent => {
       let templateFunction = template(fileContent, {
@@ -54,7 +54,10 @@ module.exports = class HtmlBuilder {
   }
 
   // 根据isMobile获取相应的模板path
-  getTemplatePath() {
+  getTemplatePath(options) {
+    if (options && options.template === 'vue') {
+      return 'template/temp.vue'
+    }
     return this.isMobile ? 'template/mobile.html' : 'template/pc.html'
   }
 

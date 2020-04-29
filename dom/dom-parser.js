@@ -17,6 +17,7 @@ function insertInArr(arr, item) {
   if (isALessB(item, arr[0])) {
     return arr.unshift(item)
   }
+  // TODO: 对于赛事动态的复杂布局，应该怎么优化呢？
   for (let i = 1; i < len; i++) {
     if (isALessB(item, arr[i])) {
       arr.splice(i, 0, item)
