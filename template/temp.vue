@@ -8,8 +8,8 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 .view-root {
-  {{ css }}
+{{ css }}
 }
 </style>

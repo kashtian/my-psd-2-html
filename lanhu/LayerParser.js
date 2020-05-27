@@ -30,7 +30,7 @@ module.exports = class LayerParser {
   }
 
   // 将layers数据解析为web style code
-  webPSCode(t) {
+  webPSCode(t, tab = '') {
     var e = this;
     this.codeString = '';
     var n = t ? 'rem' : 'px';
@@ -119,9 +119,9 @@ module.exports = class LayerParser {
       }
     }
     if ('shapeLayer' == this.layerinfo.type || 'layerSection' == this.layerinfo.type || 'layer' == this.layerinfo.type) {
-      if (this.layerinfo.fill && this.layerinfo.fill.color && (!this.layerinfo.strokeStyle || this.layerinfo.strokeStyle && this.layerinfo.strokeStyle.fillEnabled) && (this.layerinfo.blendOptions ? i.background = this.layerinfo.blendOptions.fillOpacity ? 'rgba('.concat(Math.round(this.layerinfo.fill.color.red), ',').concat(Math.round(this.layerinfo.fill.color.green), ',').concat(Math.round(this.layerinfo.fill.color.blue), ',').concat(Math.round(this.layerinfo.blendOptions.fillOpacity.value) / 100, ')') : this.layerinfo.fill.color.value : i.background = this.layerinfo.fill.color.value), this.layerinfo.strokeStyle && this.layerinfo.strokeStyle.strokeEnabled) if (this.layerinfo.strokeStyle.strokeStyleContent && !this.layerinfo.strokeStyle.strokeStyleContent.type) i.border = ''.concat(5 != this.resolu ? this.getModel(this.layerinfo.strokeStyle.strokeStyleLineWidth.value || this.layerinfo.strokeStyle.strokeStyleLineWidth) : Math.round(this.layerinfo.strokeStyle.strokeStyleLineWidth / this.imageData.width * this.resoluscale), 'px solid rgba(').concat(Math.round(this.layerinfo.strokeStyle.strokeStyleContent.color.red), ',').concat(Math.round(this.layerinfo.strokeStyle.strokeStyleContent.color.green), ',').concat(Math.round(this.layerinfo.strokeStyle.strokeStyleContent.color.blue), ',').concat(this.layerinfo.xdType ? this.layerinfo.strokeStyle.opacity.value / 100 : this.layerinfo.strokeStyle.strokeStyleOpacity.value / 100, ')');
+      if (this.layerinfo.fill && this.layerinfo.fill.color && (!this.layerinfo.strokeStyle || this.layerinfo.strokeStyle && this.layerinfo.strokeStyle.fillEnabled) && (this.layerinfo.blendOptions ? i.background = this.layerinfo.blendOptions.fillOpacity ? 'rgba('.concat(Math.round(this.layerinfo.fill.color.red), ',').concat(Math.round(this.layerinfo.fill.color.green), ',').concat(Math.round(this.layerinfo.fill.color.blue), ',').concat(Math.round(this.layerinfo.blendOptions.fillOpacity.value) / 100, ')') : this.layerinfo.fill.color.value : i.background = this.layerinfo.fill.color.value), this.layerinfo.strokeStyle && this.layerinfo.strokeStyle.strokeEnabled) if (this.layerinfo.strokeStyle.strokeStyleContent && !this.layerinfo.strokeStyle.strokeStyleContent.type) i.border = ''.concat(5 != this.resolu ? this.getModel(this.layerinfo.strokeStyle.strokeStyleLineWidth.value || this.layerinfo.strokeStyle.strokeStyleLineWidth) : Math.round(this.layerinfo.strokeStyle.strokeStyleLineWidth / this.imageData.width * this.resoluscale), n + ' solid rgba(').concat(Math.round(this.layerinfo.strokeStyle.strokeStyleContent.color.red), ',').concat(Math.round(this.layerinfo.strokeStyle.strokeStyleContent.color.green), ',').concat(Math.round(this.layerinfo.strokeStyle.strokeStyleContent.color.blue), ',').concat(this.layerinfo.xdType ? this.layerinfo.strokeStyle.opacity.value / 100 : this.layerinfo.strokeStyle.strokeStyleOpacity.value / 100, ')');
       else if (this.layerinfo.strokeStyle.strokeStyleContent && 'linear' == this.layerinfo.strokeStyle.strokeStyleContent.type) {
-        i.border = ''.concat(5 != this.resolu ? this.getModel(this.layerinfo.strokeStyle.strokeStyleLineWidth) : Math.round(this.layerinfo.strokeStyle.strokeStyleLineWidth / this.imageData.width * this.resoluscale), 'px solid');
+        i.border = ''.concat(5 != this.resolu ? this.getModel(this.layerinfo.strokeStyle.strokeStyleLineWidth) : Math.round(this.layerinfo.strokeStyle.strokeStyleLineWidth / this.imageData.width * this.resoluscale), n + ' solid');
         var x = '';
         if (this.layerinfo.strokeStyle.strokeStyleContent.gradient.colors && this.layerinfo.strokeStyle.strokeStyleContent.gradient.colors.length) for (var A = 0; A < this.layerinfo.strokeStyle.strokeStyleContent.gradient.colors.length; A++) x += x ? ', '.concat(this.layerinfo.strokeStyle.strokeStyleContent.gradient.colors[A].color.value) : ''.concat(this.layerinfo.strokeStyle.strokeStyleContent.gradient.colors[A].color.value);
         i['border-image'] = 'linear-gradient('.concat(this.layerinfo.strokeStyle.strokeStyleContent.angle && this.layerinfo.strokeStyle.strokeStyleContent.angle.value ? 90 - this.layerinfo.strokeStyle.strokeStyleContent.angle.value : 0, 'deg, ').concat(x, ') 10 10')
@@ -169,10 +169,10 @@ module.exports = class LayerParser {
                 G = '';
               if (B = 5 != this.resolu ? O[P].size ? this.getModel(O[P].size, t) : this.getModel(this.psLayerEffectsDefault.frameFX.size, t) : O[P].size ? Math.round(O[P].size / this.imageData.width * this.resoluscale) : Math.round(this.psLayerEffectsDefault.frameFX.size / this.imageData.width * this.resoluscale), O[P].type) {
                 for (var U = 0; U < O[P].gradient.colors.length; U++) G += G ? O[P].opacity ? ', rgba('.concat(Math.round(O[P].gradient.colors[U].color.red), ', ').concat(Math.round(O[P].gradient.colors[U].color.green), ', ').concat(Math.round(O[P].gradient.colors[U].color.blue), ', ').concat(O[P].opacity.value / 100, ')') : ', '.concat(O[P].gradient.colors[U].color.value) : O[P].opacity ? 'rgba('.concat(Math.round(O[P].gradient.colors[U].color.red), ', ').concat(Math.round(O[P].gradient.colors[U].color.green), ', ').concat(Math.round(O[P].gradient.colors[U].color.blue), ', ').concat(O[P].opacity.value / 100, ')') : ''.concat(O[P].gradient.colors[U].color.value);
-                i.border = ''.concat(B, 'px solid'),
+                i.border = ''.concat(B, n + ' solid'),
                   'linear' == O[P].type ? i['border-image'] = 'linear-gradient('.concat(O[P].angle ? 90 - O[P].angle.value : 0, 'deg, ').concat(G, ') ').concat(B, ' ').concat(B) : i['border-image'] = 'radial-gradient(circle, '.concat(G, ') ').concat(B, ' ').concat(B)
               } else G = O[P].color && O[P].color.red ? O[P].opacity ? 'rgba('.concat(Math.round(O[P].color.red), ', ').concat(Math.round(O[P].color.green), ', ').concat(Math.round(O[P].color.blue), ', ').concat(O[P].opacity.value / 100, ')') : 'rgba('.concat(Math.round(O[P].color.red), ', ').concat(Math.round(O[P].color.green), ', ').concat(Math.round(O[P].color.blue), ', ').concat(this.psLayerEffectsDefault.frameFX.opacity.value / 100, ')') : O[P].opacity ? 'rgba('.concat(this.psLayerEffectsDefault.frameFX.color.red, ', ').concat(this.psLayerEffectsDefault.frameFX.color.green, ', ').concat(this.psLayerEffectsDefault.frameFX.color.blue, ', ').concat(O[P].opacity.value / 100, ')') : 'rgba('.concat(this.psLayerEffectsDefault.frameFX.color.red, ', ').concat(this.psLayerEffectsDefault.frameFX.color.green, ', ').concat(this.psLayerEffectsDefault.frameFX.color.blue, ', ').concat(this.psLayerEffectsDefault.frameFX.opacity.value / 100, ')'),
-                i.border = ''.concat(B, 'px solid ').concat(G);
+                i.border = ''.concat(B, n + ' solid ').concat(G);
               break
             }
           }
@@ -229,27 +229,28 @@ module.exports = class LayerParser {
     }
     // 修正单行text的行高
     if ('textLayer' == this.layerinfo.type) {
-      if (this.layerinfo.textInfo.size >= this.layerinfo.height) {        
-        i['line-height'] = i.height
-        let size = Math.floor(this.layerinfo.textInfo.size)
-        let textWidth = size * this.layerinfo.textInfo.text.trim().length
-        if (this.layerinfo.width < textWidth) {
-          // 对于UI宽度可能会小于实际显示宽度的文本，重置width属性
-          this.layerinfo._extraWidth = 10
-          this.layerinfo.width += this.layerinfo._extraWidth
-          i.width = this.getModel(this.layerinfo.width, t) + n
-        }
-      } else if (this.layerinfo.textInfo.leading < this.layerinfo.textInfo.size) {
-        delete i['line-height']
+      delete i.width
+      delete i['line-height']
+      delete i.height
+      delete i['font-family']
+      if (i['font-weight'] !== 'bold') {
+        delete i['font-weight']
+      }
+    } else {
+      if (i.width === '0' + n) {
+        delete i.width
+      }
+      if (i.height === '0' + n) {
+        delete i.height
       }
     }
 
-    for (var Y in i) i[Y] && (this.codeString += ''.concat(Y, ':').concat(i[Y], ';\n'))
+    for (var Y in i) i[Y] && (this.codeString += tab.concat(Y, ': ').concat(i[Y], ';\n'))
     return this.codeString
   }
 
   getModel(t, e) {
-    return e ? Math.floor(t / this.mobileFontSize * 1000) / 1000 : t ? Math.floor(t / this.resoluscale) : '0'
+    return t ? e ? Math.round(t / this.mobileFontSize * 100) / 100 : Math.round(t / this.resoluscale) : '0'
   }
 
   getFontWeight(t) {

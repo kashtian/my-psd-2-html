@@ -9,8 +9,13 @@ html, body {
 
 .flex {
   display: flex;
+  align-items: center;
 }
 
 .flow-root {
   display: flow-root;
+}
+
+.flex-1 {
+  flex: 1;
 }

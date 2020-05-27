@@ -14,7 +14,7 @@ let htmlBuilder = new HtmlBuilder()
 let html = ''
 let style = ''
 let mobile = true
-let mobileFontSize = 32
+let mobileFontSize = 20
 
 let sections = []
 let styles = []
@@ -81,13 +81,13 @@ function traverseDoms(nodes, level = 0, si) {
     temp = htmlBuilder.createNodeStart(n, level, i)
     html += temp
     sections[si] += temp
+    if (n._children) {
+      traverseDoms(n._children, level + 1, si)
+    }
     // 生成节点样式
     temp = styleBuilder.createNodeStyle(n, level, i, nodes)
     style += temp
     styles[si] += temp
-    if (n._children) {
-      traverseDoms(n._children, level + 1, si)
-    }
     // 构建html结束标签
     temp = htmlBuilder.createNodeEnd(n, level)
     html += temp

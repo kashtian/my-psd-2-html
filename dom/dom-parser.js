@@ -1,6 +1,8 @@
+const utils = require('./utils.js')
+
 // left 不同为水平方向，left相同为垂直方向判断top
 function isALessB(a, b) {
-  if (a.top !== b.top && !isVerticalCross(a, b) ) {
+  if (a.top !== b.top && !utils.isVerticalCross(a, b) ) {
     // 垂直布局
     return a.top < b.top
   } else {
@@ -36,15 +38,10 @@ function addChild(p, c) {
   c._parent = p
 }
 
-// 判断两个元素在垂直方向是否有交集, 相交不超过元素高度的1/3就算不相交
-function isVerticalCross(a, b) {
-  return !(a.top + a.height / 3 >= (b.top + b.height) || (a.top + a.height - a.height / 3) <= b.top)
-}
-
 // 判断item与parent是否是父子元素关系
 function isParent(item, parent) {
   return item.left >= parent.left && (item.left + item.width) <= (parent.left + parent.width) // 水平方向范围
-    && isVerticalCross(item, parent) // 垂直方向有交集的才能是父子关系
+    && utils.isVerticalCross(item, parent) // 垂直方向有交集的才能是父子关系
 }
 
 // 判断item是否是parent的后代，并将item加入到父级元素的_children中

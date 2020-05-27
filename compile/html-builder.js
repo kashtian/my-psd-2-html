@@ -12,7 +12,7 @@ module.exports = class HtmlBuilder {
     let nodeClass = ''
 
     n._class = level > 0 ? n._parent._class + '_' + (i + 1) : tag + (i + 1)
-    n._tab = level > 0 ? n._parent._tab + this.tabUnit : ''
+    n._tab = level > 0 ? n._parent._tab + this.tabUnit : this.tabUnit
     nodeClass = (n._prefixClass ? n._prefixClass + ' ' : '') + n._class
     if (level === 0) {
       str += `<!-- ${n._class} start -->\n`
@@ -29,7 +29,7 @@ module.exports = class HtmlBuilder {
   // 创建节点结束标签
   createNodeEnd(n, level) {
     let str = '' 
-    str += n._tab + `</${this.getTag(level)}>\n`
+    str += (n._children ? n._tab : '') + `</${this.getTag(level, n)}>\n`
     if (level === 0) {
       str += `<!-- ${n._class} end -->\n`
     }
